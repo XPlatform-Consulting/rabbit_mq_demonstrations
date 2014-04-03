@@ -1,0 +1,79 @@
+<%=  script_for_variables_hash %>
+<% form_for(:rabbit_mq_demonstration, @rabbit_mq_demonstration, :url => { :controller => 'actions', :action => 'update' },  :html => { :id => 'edit_action' } ) do |f| %>
+  <%= f.error_messages %>
+  <li>
+    <%= f.label "Name"%>
+    <%= f.text_field :name %>
+  </li>
+
+  <li>
+    <%= f.label :comments %>
+    <%= f.text_area :comments, :rows=>2 %>
+  </li>
+
+  <li>
+    <%= f.label "AMPQ Queue Name"%>
+    <%= f.text_field :queue_name %>
+  </li>
+  <li>
+    <%= f.label 'Keep on-going?' %>
+    <%= f.check_box :keep_ongoing %>
+  </li>
+  <%=begin_advanced_section('connection_arguments', 'Queue connection arguments')%>
+  <li>
+    <%= f.label 'AMPQ Server Node'%>
+    <%= node_selector_by_name('rabbit_mq_demonstration','queue_node',@rabbit_mq_demonstration.queue_node) %>
+  </li>
+  <li>
+    <%= f.label 'Queue_host' %>
+    <%= f.text_field :queue_host, :placeholder=>'localhost' %>
+  </li>
+    <li>
+    <%= f.label 'Queue_vhost' %>
+    <%= f.text_field :queue_vhost, :placeholder=>'' %>
+  </li>
+  <li>
+    <%= f.label 'Queue_port' %>
+    <%= f.text_field :queue_port, :placeholder=>'5672' %>
+  </li>
+  <li>
+    <%= f.label 'Queue_user' %>
+    <%= f.text_field :queue_user, :placeholder=>'guest' %>
+  </li>
+  <li>
+    <%= f.label 'Queue_password' %>
+    <%= f.text_field :queue_password, :placeholder=>'guest' %>
+  </li>
+  <li>
+    <%= f.label 'Use SSL' %>
+    <%= f.check_box :use_ssl %>
+  </li>
+  <%=end_advanced_section('connection_arguments')%>
+  <li>
+    <%= f.label 'Consume without ACK?' %>
+    <%= f.check_box :no_ack %>
+  </li>
+  <li>
+    <%= f.label 'Polling frequency' %>
+    <%= f.text_field :polling_frequency, :placeholder=>RabbitMqDemonstration::DEFAULT_POLLING_FREQUENCY %>
+  </li>
+
+
+  <%=begin_advanced_section('advanced_outputs', 'Advanced outputs')%>
+  <li>
+    <%=  draw_variables_hash('rabbit_mq_demonstration', 'formatted_outputs', 'Formatted outputs', @rabbit_mq_demonstration.formatted_outputs)%>
+  </li>
+  <li>
+    <%= f.label 'Outputs formatting code' %>
+    <%= f.text_area :message_postprocessing, :rows =>3 %>
+    <br/>Optional - advanced outputs can be set by parsing the text variable <b>'message'</b> and assigning values to the outputs hash 'outputs'.
+    <br/>For example if the return message was a string <b>'file: lala.mov, size: 15440'</b>, the size could be extracted as follow:
+    <br/>&nbsp;&nbsp;<b>outputs['size'] = message.match(/size: ([0-9]+)/)[1].to_i</b>
+  </li>
+
+  <%=end_advanced_section('advanced_outputs')%>
+
+<% end %>
+
+<%=  enable_rich_textedit('rabbit_mq_demonstration_message_postprocessing','ruby',250)%>
+
